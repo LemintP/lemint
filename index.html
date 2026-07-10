@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lemint</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* ==============================
+           ベーススタイル・背景固定
+           ============================== */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', 'Noto Sans JP', sans-serif;
+            color: #333;
+            background-image: url('background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            background-color: #f5f5f5;
+            line-height: 1.6;
+        }
+
+        .overlay {
+            background-color: rgba(255, 255, 255, 0.5);
+            min-height: 100vh;
+            padding-top: 100px; 
+            padding-bottom: 60px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ==============================
+           ヘッダー
+           ============================== */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            z-index: 1000;
+        }
+
+        .header-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        .header-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 15px;
+            border: 1px solid #eaeaea;
+        }
+
+        .header-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            margin-right: auto;
+        }
+
+        nav button {
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-family: inherit;
+            font-weight: 500;
+            margin-left: 20px;
+            cursor: pointer;
+            color: #777;
+            padding: 5px 0;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        nav button:hover {
+            color: #111;
+        }
+
+        nav button::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: #111;
+            transition: width 0.3s ease, left 0.3s ease;
+        }
+
+        nav button.active {
+            color: #111;
+            font-weight: 700;
+        }
+
+        nav button.active::after {
+            width: 100%;
+            left: 0;
+        }
+
+        /* ==============================
+           ページセクション
+           ============================== */
+        .page-section {
+            display: none;
+            animation: fadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(15px);
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            margin-bottom: 30px;
+            color: #222;
+        }
+
+        /* ==============================
+           プロフィール
+           ============================== */
+        #page-profile h2 {
+            text-align: center;
+        }
+
+        .profile-box {
+            background: #fff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+            max-width: 500px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .profile-box p {
+            margin-bottom: 20px;
+            color: #555;
+            line-height: 1.8;
+        }
+
+        .sns-links {
+            margin: 30px auto 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 320px;
+        }
+
+        .sns-links a {
+            display: block;
+            padding: 12px 20px;
+            text-align: center;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            transition: transform 0.2s, opacity 0.2s, box-shadow 0.2s;
+            line-height: 1.4;
+        }
+
+        .sns-links a:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        /* ==============================
+           楽曲リスト (Gridレイアウト)
+           ============================== */
+        .controls {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 25px;
+        }
+
+        .controls select {
+            padding: 8px 16px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            color: #333;
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        
+        .controls select:focus {
+            border-color: #999;
+        }
+
+        .song-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            /* 隣のカードが伸びても、自分は連動して伸びないようにする設定 */
+            align-items: start; 
+        }
+
+        .song-card {
+            display: flex;
+            flex-direction: column; 
+            background: #fff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            /* height: 100%; はJSで管理するため削除 */
+        }
+
+        .song-card:hover {
+            transform: translateY(-4px); 
+            box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+        }
+
+        .song-thumb {
+            width: 100%; 
+            flex-shrink: 0;
+        }
+
+        .song-thumb img {
+            width: 100%;
+            height: auto; 
+            aspect-ratio: 16 / 9; 
+            object-fit: cover;
+            display: block;
+        }
+
+        .song-info {
+            padding: 20px 25px; 
+            flex-grow: 1; 
+            display: flex;
+            flex-direction: column;
+        }
+
+        .song-title {
+            margin: 0 0 15px 0;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #111;
+            line-height: 1.4;
+        }
+
+        .song-details {
+            border-collapse: collapse;
+            margin: 0 0 15px 0;
+            width: 100%;
+        }
+
+        .song-details th {
+            width: 75px; 
+            color: #888;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-align: left;
+            vertical-align: top;
+            padding: 0 15px 6px 0;
+            white-space: nowrap;
+            text-transform: uppercase; 
+            letter-spacing: 0.05em;
+        }
+
+        .song-details td {
+            color: #444;
+            font-size: 0.9rem;
+            text-align: left;
+            vertical-align: top;
+            padding: 0 0 6px 0;
+            font-weight: 500;
+        }
+
+        /* 歌詞アコーディオン */
+        .song-lyrics-details {
+            margin-bottom: 15px;
+        }
+
+        .song-lyrics-details summary {
+            font-size: 0.85rem;
+            color: #555;
+            cursor: pointer;
+            user-select: none;
+            font-weight: 700;
+            outline: none;
+            display: inline-block;
+            background: #f4f4f4;
+            padding: 6px 16px;
+            border-radius: 20px;
+            transition: background 0.2s, color 0.2s;
+            letter-spacing: 0.05em;
+        }
+
+        .song-lyrics-details summary:hover {
+            background: #e4e4e4;
+            color: #111;
+        }
+
+        .song-lyrics-content {
+            margin-top: 15px;
+            padding: 15px 20px;
+            background: #fafafa;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            color: #555;
+            border: 1px solid #eee;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .song-links {
+            margin-top: auto; 
+            padding-top: 15px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap; 
+        }
+
+        .song-links a {
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 4px;
+            color: white;
+            letter-spacing: 0.02em;
+            transition: opacity 0.2s, transform 0.2s;
+        }
+
+        .song-links a:hover {
+            opacity: 0.85;
+            transform: translateY(-2px);
+        }
+
+        /* ==============================
+           リンクボタン共通カラー設定
+           ============================== */
+        .link-twitter { background: #1DA1F2; }
+        .link-nico { background: #252525; }
+        .link-yt { background: #FF0000; }
+        .link-piapro { background: #D74973; }
+        .link-drive { background: #4285F4; }
+
+        @media (max-width: 768px) {
+            .song-list { grid-template-columns: 1fr; }
+            .sns-links { max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-inner">
+            <img src="icon.jpg" alt="Icon" class="header-icon">
+            <div class="header-title">Lemint</div>
+            <nav>
+                <button onclick="switchTab('profile')" id="tab-profile" class="active">Profile</button>
+                <button onclick="switchTab('songs')" id="tab-songs">Songs</button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="overlay">
+        <div class="container">
+
+            <main id="page-profile" class="page-section active">
+                <h2>Profile</h2>
+                <div class="profile-box">
+                    <p>Lemint</p>
+                    <p>music<br>vocaloid</p>
+                    <p>2021.11.06 – Present</p>
+                    
+                    <h3>Links</h3>
+                    <div class="sns-links">
+                        <a href="https://twitter.com/le_M_int" target="_blank" class="link-twitter">Twitter</a>
+                        <a href="https://www.nicovideo.jp/user/121636330" target="_blank" class="link-nico">niconico</a>
+                        <a href="https://www.youtube.com/channel/UCHJbC0yAotni47fFwrexqdQ" target="_blank" class="link-yt">YouTube</a>
+                        <a href="https://piapro.jp/Lemintp" target="_blank" class="link-piapro">piapro</a>
+                        <a href="https://drive.google.com/drive/folders/10OUgz1UeEsZzzGrgGAmss7dl6GxdIE2n" target="_blank" class="link-drive">Sound Library<br>(Google Drive)</a>
+                    </div>
+                </div>
+            </main>
+
+            <main id="page-songs" class="page-section">
+                <h2>Songs</h2>
+                <div class="controls">
+                    <select id="sort-select" onchange="sortAndRenderSongs()">
+                        <option value="newest">Newest</option>
+                        <option value="oldest">Oldest</option>
+                    </select>
+                </div>
+                <div id="song-list-container" class="song-list"></div>
+            </main>
+
+        </div>
+    </div>
+
+    <script>
+        // ==============================
+        // 楽曲データ
+        // ==============================
+        const songsData = [
+            {
+                title: "NEWSKY",
+                date: "2021/11/06",
+                vocal: "初音ミク",
+                lyricsFile: "lyrics/0001.txt",
+                thumb: "thumbnails/0001.jpg",
+                niconico: "https://nico.ms/sm39588347", 
+                youtube: "https://youtu.be/ByEmixKxvMw", 
+                piapro: "https://piapro.jp/t/54qq" 
+            },
+            {
+                title: "Green Planet",
+                date: "2022/04/22",
+                vocal: "初音ミク",
+                lyricsFile: "lyrics/0002.txt",
+                thumb: "thumbnails/0002.jpg",
+                niconico: "https://nico.ms/sm40352731",
+                youtube: "https://youtu.be/KXOM0nYP26M",
+                piapro: "https://piapro.jp/t/Ocfg"
+            },
+            {
+                title: "渇愛",
+                date: "2022/08/01",
+                vocal: "初音ミク",
+                lyricsFile: "lyrics/0003.txt",
+                thumb: "thumbnails/0003.jpg",
+                niconico: "https://nico.ms/sm40854775",
+                youtube: "https://youtu.be/zcyJnU8Y96w",
+                piapro: "https://piapro.jp/t/x965"
+            },
+            {
+                title: "Chaotic Straightforward",
+                date: "2022/09/02",
+                thumb: "thumbnails/0004.jpg",
+                niconico: "https://nico.ms/sm41018806",
+                youtube: "https://youtu.be/IjYdZPqYJCU"
+            },
+            {
+                title: "狂染",
+                date: "2022/10/07",
+                vocal: "知声",
+                lyricsFile: "lyrics/0005.txt",
+                thumb: "thumbnails/0005.jpg",
+                niconico: "https://nico.ms/sm41190709",
+                youtube: "https://youtu.be/D3PMg6WK6pU",
+                piapro: "https://piapro.jp/t/uo6N"
+            },
+            {
+                title: "狂染",
+                date: "2022/12/13",
+                vocal: "初音ミク",
+                lyricsFile: "lyrics/0006.txt",
+                thumb: "thumbnails/0006.jpg",
+                niconico: "https://nico.ms/sm41499130",
+                youtube: "https://youtu.be/V7vBfSrCfkc",
+                piapro: "https://piapro.jp/t/9xqt"
+            },
+            {
+                title: "ヒカリアメグミ",
+                date: "2023/03/18",
+                vocal: "初音ミク",
+                credit: "Illustration : 珠庵",
+                lyricsFile: "lyrics/0007.txt",
+                thumb: "thumbnails/0007.jpg",
+                niconico: "https://nico.ms/sm41949513",
+                youtube: "https://youtu.be/vs0MhBIGwu8",
+                piapro: "https://piapro.jp/t/XSuX"
+            },
+            {
+                title: "贖命輪廻",
+                date: "2022/08/04",
+                vocal: "初音ミク",
+                credit: "Lyric : Kou / Illustration : 珠庵",
+                lyricsFile: "lyrics/0008.txt",
+                thumb: "thumbnails/0008.jpg",
+                niconico: "https://nico.ms/sm42573866",
+                youtube: "https://youtu.be/84gEbH65jxs",
+                piapro: "https://piapro.jp/t/GOXK"
+            },
+            {
+                title: "ピアノ幻想曲「今だけの幻影」 | Piano Fantasia - Carpe diem simlacrum",
+                date: "2023/09/17",
+                thumb: "thumbnails/0009.jpg",
+                niconico: "https://nico.ms/sm42759884",
+                youtube: "https://youtu.be/pTwJIvecIaU"
+            },
+            {
+                title: "ピアノ夜想曲「憂愁」 | Piano Nocturne - Abyss",
+                date: "2023/09/23",
+                thumb: "thumbnails/0010.jpg",
+                niconico: "https://nico.ms/sm42791644",
+                youtube: "https://youtu.be/PMNYHVf3Q3w"
+            },
+            {
+                title: "常は不可逆となりて序曲「幻想闇天」",
+                date: "2023/11/05",
+                vocal: "重音テト",
+                credit: "Illustration & Movie : 珠庵",
+                lyricsFile: "lyrics/0011.txt",
+                thumb: "thumbnails/0011.jpg",
+                niconico: "https://nico.ms/sm42986550",
+                youtube: "https://youtu.be/VLvja8llmzM",
+                piapro: "https://piapro.jp/t/24u9"
+            },
+            {
+                title: "HARMONIA",
+                date: "2024/04/09",
+                vocal: "めろう",
+                lyricsFile: "lyrics/0012.txt",
+                thumb: "thumbnails/0012.jpg",
+                niconico: "https://nico.ms/sm43617569",
+                youtube: "https://youtu.be/ZLYX-U0S6zg",
+                piapro: "https://piapro.jp/t/Bo2k"
+            },
+            {
+                title: "常は不可逆となりて第一番「過去に送る」",
+                date: "2024/04/28",
+                vocal: "重音テト",
+                credit: "Illustration & Movie : 珠庵",
+                lyricsFile: "lyrics/0013.txt",
+                thumb: "thumbnails/0013.jpg",
+                niconico: "https://nico.ms/sm43711357",
+                youtube: "https://youtu.be/DdrZWmssnyg",
+                piapro: "https://piapro.jp/t/huh7"
+            },
+            {
+                title: "ピアノ綺想曲「小休止」 | Piano Capriccio - Respite",
+                date: "2024/08/20",
+                thumb: "thumbnails/0014.jpg",
+                niconico: "https://nico.ms/sm43996049",
+                youtube: "https://youtu.be/NhxXdCjvHt0"
+            },
+            {
+                title: "Green Planet -Rearranged-",
+                date: "2024/10/14",
+                vocal: "初音ミク",
+                lyricsFile: "lyrics/0015.txt",
+                thumb: "thumbnails/0015.jpg",
+                niconico: "https://nico.ms/sm44214654",
+                youtube: "https://youtu.be/zz1huqjLcnI",
+                piapro: "https://piapro.jp/t/x1Hg"
+            },
+            {
+                title: "常は不可逆となりて第二番「幸福」",
+                date: "2025/04/01",
+                vocal: "重音テト",
+                credit: "Illustration : 珠庵",
+                lyricsFile: "lyrics/0016.txt",
+                thumb: "thumbnails/0016.jpg",
+                niconico: "https://nico.ms/sm44832957",
+                youtube: "https://youtu.be/5PKFqHsGg0I",
+                piapro: "https://piapro.jp/t/bzKC"
+            },
+            {
+                title: "エクセプト",
+                date: "2025/12/13",
+                vocal: "知声",
+                credit: "Illustration : 珠庵",
+                lyricsFile: "lyrics/0017.txt",
+                thumb: "thumbnails/0017.jpg",
+                niconico: "https://nico.ms/sm45722463",
+                youtube: "https://youtu.be/GKsiRJs1GKU",
+                piapro: "https://piapro.jp/t/IVxg"
+            },
+            {
+                title: "藍",
+                date: "2026/02/21",
+                vocal: "ナースロボ＿タイプＴ",
+                credit: "Handwriting : Lemint, 珠庵",
+                lyricsFile: "lyrics/0018.txt",
+                thumb: "thumbnails/0018.jpg",
+                niconico: "https://nico.ms/sm45967662",
+                youtube: "https://youtu.be/_rLAIVB6GCc",
+                piapro: "https://piapro.jp/t/q5ap"
+            }
+        ];
+
+        // ==============================
+        // ページ切り替え処理
+        // ==============================
+        function switchTab(targetId) {
+            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('nav button').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById('page-' + targetId).classList.add('active');
+            document.getElementById('tab-' + targetId).classList.add('active');
+
+            if (targetId === 'songs') {
+                sortAndRenderSongs();
+            }
+        }
+
+        // ==============================
+        // カードの初期高さを揃える処理
+        // ==============================
+        function adjustCardHeights() {
+            const cards = document.querySelectorAll('.song-card');
+            if (cards.length === 0) return;
+
+            // 正確な「閉じた状態」の高さを測るため、開いているアコーディオンを一時的に全て閉じる
+            const detailsElements = document.querySelectorAll('.song-lyrics-details');
+            const openStates = [];
+            detailsElements.forEach((details, index) => {
+                openStates[index] = details.open;
+                details.open = false;
+            });
+
+            // 一旦高さをリセットして自然な高さを計算させる
+            cards.forEach(card => {
+                card.style.minHeight = 'auto';
+            });
+
+            // 全カードの中で一番大きい高さを取得
+            let maxHeight = 0;
+            cards.forEach(card => {
+                const h = card.offsetHeight;
+                if (h > maxHeight) {
+                    maxHeight = h;
+                }
+            });
+
+            // 取得した最大高さを全カードの「最小高さ」として適用（初期状態をすべて同じにする）
+            cards.forEach(card => {
+                card.style.minHeight = maxHeight + 'px';
+            });
+
+            // アコーディオンの開閉状態を元に戻す
+            detailsElements.forEach((details, index) => {
+                if (openStates[index]) {
+                    details.open = true;
+                }
+            });
+        }
+
+        // 画面サイズが変わったときにも高さを再計算する
+        window.addEventListener('resize', () => {
+            if (document.getElementById('page-songs').classList.contains('active')) {
+                adjustCardHeights();
+            }
+        });
+
+        // ==============================
+        // 楽曲リストの並べ替えと描画処理
+        // ==============================
+        function sortAndRenderSongs() {
+            const sortOrder = document.getElementById('sort-select').value;
+            const container = document.getElementById('song-list-container');
+            container.innerHTML = ''; 
+
+            const sortedSongs = [...songsData].sort((a, b) => {
+                const dateA = new Date(a.date);
+                const dateB = new Date(b.date);
+                if (sortOrder === 'newest') {
+                    return dateB - dateA;
+                } else {
+                    return dateA - dateB;
+                }
+            });
+
+            sortedSongs.forEach(song => {
+                const card = document.createElement('div');
+                card.className = 'song-card';
+
+                let linksHTML = '';
+                if (song.niconico) linksHTML += `<a href="${song.niconico}" target="_blank" class="link-nico">niconico</a>`;
+                if (song.youtube) linksHTML += `<a href="${song.youtube}" target="_blank" class="link-yt">YouTube</a>`;
+                if (song.piapro) linksHTML += `<a href="${song.piapro}" target="_blank" class="link-piapro">piapro</a>`;
+
+                let lyricsHTML = '';
+                if (song.lyricsFile) {
+                    lyricsHTML = `
+                        <details class="song-lyrics-details">
+                            <summary>歌詞を表示</summary>
+                            <div class="song-lyrics-content">読み込み中...</div>
+                        </details>
+                    `;
+                }
+
+                card.innerHTML = `
+                    <div class="song-thumb">
+                        <img src="${song.thumb}" alt="${song.title} thumbnail">
+                    </div>
+                    <div class="song-info">
+                        <h3 class="song-title">${song.title}</h3>
+                        
+                        <table class="song-details">
+                            <tbody>
+                                <tr>
+                                    <th>Released</th>
+                                    <td>${song.date}</td>
+                                </tr>
+                                ${song.vocal ? `<tr><th>Vocal</th><td>${song.vocal}</td></tr>` : ''}
+                                ${song.credit ? `<tr><th>Credit</th><td>${song.credit}</td></tr>` : ''}
+                            </tbody>
+                        </table>
+                        
+                        ${lyricsHTML}
+                        
+                        <div class="song-links">
+                            ${linksHTML}
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+
+                if (song.lyricsFile) {
+                    const contentDiv = card.querySelector('.song-lyrics-content');
+                    fetch(song.lyricsFile)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.text();
+                        })
+                        .then(text => {
+                            if (contentDiv) contentDiv.textContent = text;
+                        })
+                        .catch(err => {
+                            if (contentDiv) {
+                                contentDiv.innerHTML = '<span style="color:red; font-size:0.8rem;">※ローカル環境のためテキストを読み込めません。サーバー環境でご確認ください。</span>';
+                            }
+                        });
+                }
+            });
+
+            // 描画後に、一番情報が多いカードに合わせてすべての初期高さを揃える
+            requestAnimationFrame(() => {
+                adjustCardHeights();
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            sortAndRenderSongs();
+        });
+    </script>
+</body>
+</html>
