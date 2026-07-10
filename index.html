@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lemint</title>
+    <!-- ブラウザのタブ用アイコン（ファビコン） -->
+    <link rel="icon" href="icon.jpg" type="image/jpeg">
+    <!-- Google Fonts の読み込み -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
@@ -225,7 +228,6 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 25px;
-            /* 隣のカードが伸びても、自分は連動して伸びないようにする設定 */
             align-items: start; 
         }
 
@@ -237,7 +239,6 @@
             overflow: hidden;
             box-shadow: 0 8px 24px rgba(0,0,0,0.06);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            /* height: 100%; はJSで管理するため削除 */
         }
 
         .song-card:hover {
@@ -285,7 +286,8 @@
             font-size: 0.85rem;
             font-weight: 500;
             text-align: left;
-            vertical-align: top;
+            /* 文字の下端を揃える */
+            vertical-align: baseline; 
             padding: 0 15px 6px 0;
             white-space: nowrap;
             text-transform: uppercase; 
@@ -296,7 +298,8 @@
             color: #444;
             font-size: 0.9rem;
             text-align: left;
-            vertical-align: top;
+            /* 文字の下端を揃える */
+            vertical-align: baseline; 
             padding: 0 0 6px 0;
             font-weight: 500;
         }
@@ -512,7 +515,7 @@
                 piapro: "https://piapro.jp/t/GOXK"
             },
             {
-                title: "ピアノ幻想曲「今だけの幻影」 | Piano Fantasia - Carpe diem simlacrum",
+                title: "ピアノ幻想曲「今だけの幻影」 | Piano Fantasia - Carpe diem simulacrum",
                 date: "2023/09/17",
                 thumb: "thumbnails/0009.jpg",
                 niconico: "https://nico.ms/sm42759884",
@@ -600,7 +603,7 @@
                 title: "藍",
                 date: "2026/02/21",
                 vocal: "ナースロボ＿タイプＴ",
-                credit: "Handwriting : Lemint, 珠庵",
+                credit: "Handwriting : 珠庵",
                 lyricsFile: "lyrics/0018.txt",
                 thumb: "thumbnails/0018.jpg",
                 niconico: "https://nico.ms/sm45967662",
@@ -631,7 +634,6 @@
             const cards = document.querySelectorAll('.song-card');
             if (cards.length === 0) return;
 
-            // 正確な「閉じた状態」の高さを測るため、開いているアコーディオンを一時的に全て閉じる
             const detailsElements = document.querySelectorAll('.song-lyrics-details');
             const openStates = [];
             detailsElements.forEach((details, index) => {
@@ -639,12 +641,10 @@
                 details.open = false;
             });
 
-            // 一旦高さをリセットして自然な高さを計算させる
             cards.forEach(card => {
                 card.style.minHeight = 'auto';
             });
 
-            // 全カードの中で一番大きい高さを取得
             let maxHeight = 0;
             cards.forEach(card => {
                 const h = card.offsetHeight;
@@ -653,12 +653,10 @@
                 }
             });
 
-            // 取得した最大高さを全カードの「最小高さ」として適用（初期状態をすべて同じにする）
             cards.forEach(card => {
                 card.style.minHeight = maxHeight + 'px';
             });
 
-            // アコーディオンの開閉状態を元に戻す
             detailsElements.forEach((details, index) => {
                 if (openStates[index]) {
                     details.open = true;
@@ -666,7 +664,6 @@
             });
         }
 
-        // 画面サイズが変わったときにも高さを再計算する
         window.addEventListener('resize', () => {
             if (document.getElementById('page-songs').classList.contains('active')) {
                 adjustCardHeights();
@@ -758,7 +755,6 @@
                 }
             });
 
-            // 描画後に、一番情報が多いカードに合わせてすべての初期高さを揃える
             requestAnimationFrame(() => {
                 adjustCardHeights();
             });
