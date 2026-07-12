@@ -430,12 +430,12 @@
 
     <script>
         // ==============================
-        // 楽曲データ
+        // 楽曲データ（ドット区切りに変更）
         // ==============================
         const songsData = [
             {
                 title: "NEWSKY",
-                date: "2021/11/06",
+                date: "2021.11.06",
                 vocal: "初音ミク",
                 lyricsFile: "lyrics/0001.txt",
                 thumb: "thumbnails/0001.jpg",
@@ -445,7 +445,7 @@
             },
             {
                 title: "Green Planet",
-                date: "2022/04/22",
+                date: "2022.04.22",
                 vocal: "初音ミク",
                 lyricsFile: "lyrics/0002.txt",
                 thumb: "thumbnails/0002.jpg",
@@ -455,7 +455,7 @@
             },
             {
                 title: "渇愛",
-                date: "2022/08/01",
+                date: "2022.08.01",
                 vocal: "初音ミク",
                 lyricsFile: "lyrics/0003.txt",
                 thumb: "thumbnails/0003.jpg",
@@ -465,14 +465,14 @@
             },
             {
                 title: "Chaotic Straightforward",
-                date: "2022/09/02",
+                date: "2022.09.02",
                 thumb: "thumbnails/0004.jpg",
                 niconico: "https://nico.ms/sm41018806",
                 youtube: "https://youtu.be/IjYdZPqYJCU"
             },
             {
                 title: "狂染",
-                date: "2022/10/07",
+                date: "2022.10.07",
                 vocal: "知声",
                 lyricsFile: "lyrics/0005.txt",
                 thumb: "thumbnails/0005.jpg",
@@ -482,7 +482,7 @@
             },
             {
                 title: "狂染",
-                date: "2022/12/13",
+                date: "2022.12.13",
                 vocal: "初音ミク",
                 lyricsFile: "lyrics/0006.txt",
                 thumb: "thumbnails/0006.jpg",
@@ -492,7 +492,7 @@
             },
             {
                 title: "ヒカリアメグミ",
-                date: "2023/03/18",
+                date: "2023.03.18",
                 vocal: "初音ミク",
                 credit: "Illustration : 珠庵",
                 lyricsFile: "lyrics/0007.txt",
@@ -503,7 +503,7 @@
             },
             {
                 title: "贖命輪廻",
-                date: "2022/08/04",
+                date: "2022.08.04",
                 vocal: "初音ミク",
                 credit: "Lyric : Kou / Illustration : 珠庵",
                 lyricsFile: "lyrics/0008.txt",
@@ -514,21 +514,21 @@
             },
             {
                 title: "ピアノ幻想曲「今だけの幻影」 | Piano Fantasia - Carpe diem simulacrum",
-                date: "2023/09/17",
+                date: "2023.09.17",
                 thumb: "thumbnails/0009.jpg",
                 niconico: "https://nico.ms/sm42759884",
                 youtube: "https://youtu.be/pTwJIvecIaU"
             },
             {
                 title: "ピアノ夜想曲「憂愁」 | Piano Nocturne - Abyss",
-                date: "2023/09/23",
+                date: "2023.09.23",
                 thumb: "thumbnails/0010.jpg",
                 niconico: "https://nico.ms/sm42791644",
                 youtube: "https://youtu.be/PMNYHVf3Q3w"
             },
             {
                 title: "常は不可逆となりて序曲「幻想闇天」",
-                date: "2023/11/05",
+                date: "2023.11.05",
                 vocal: "重音テト",
                 credit: "Illustration & Movie : 珠庵",
                 lyricsFile: "lyrics/0011.txt",
@@ -539,7 +539,7 @@
             },
             {
                 title: "HARMONIA",
-                date: "2024/04/09",
+                date: "2024.04.09",
                 vocal: "めろう",
                 lyricsFile: "lyrics/0012.txt",
                 thumb: "thumbnails/0012.jpg",
@@ -549,7 +549,7 @@
             },
             {
                 title: "常は不可逆となりて第一番「過去に送る」",
-                date: "2024/04/28",
+                date: "2024.04.28",
                 vocal: "重音テト",
                 credit: "Illustration & Movie : 珠庵",
                 lyricsFile: "lyrics/0013.txt",
@@ -560,14 +560,14 @@
             },
             {
                 title: "ピアノ綺想曲「小休止」 | Piano Capriccio - Respite",
-                date: "2024/08/20",
+                date: "2024.08.20",
                 thumb: "thumbnails/0014.jpg",
                 niconico: "https://nico.ms/sm43996049",
                 youtube: "https://youtu.be/NhxXdCjvHt0"
             },
             {
                 title: "Green Planet -Rearranged-",
-                date: "2024/10/14",
+                date: "2024.10.14",
                 vocal: "初音ミク",
                 lyricsFile: "lyrics/0015.txt",
                 thumb: "thumbnails/0015.jpg",
@@ -577,7 +577,7 @@
             },
             {
                 title: "常は不可逆となりて第二番「幸福」",
-                date: "2025/04/01",
+                date: "2025.04.01",
                 vocal: "重音テト",
                 credit: "Illustration : 珠庵",
                 lyricsFile: "lyrics/0016.txt",
@@ -588,7 +588,7 @@
             },
             {
                 title: "エクセプト",
-                date: "2025/12/13",
+                date: "2025.12.13",
                 vocal: "知声",
                 credit: "Illustration : 珠庵",
                 lyricsFile: "lyrics/0017.txt",
@@ -599,7 +599,7 @@
             },
             {
                 title: "藍",
-                date: "2026/02/21",
+                date: "2026.02.21",
                 vocal: "ナースロボ＿タイプＴ",
                 credit: "Handwriting : 珠庵",
                 lyricsFile: "lyrics/0018.txt",
@@ -677,8 +677,9 @@
             container.innerHTML = ''; 
 
             const sortedSongs = [...songsData].sort((a, b) => {
-                const dateA = new Date(a.date);
-                const dateB = new Date(b.date);
+                // ドット区切り(.)を一時的にスラッシュ(/)に置換して日付を比較（Safari等のエラー防止対策）
+                const dateA = new Date(a.date.replace(/\./g, '/'));
+                const dateB = new Date(b.date.replace(/\./g, '/'));
                 if (sortOrder === 'newest') {
                     return dateB - dateA;
                 } else {
